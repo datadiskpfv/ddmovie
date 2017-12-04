@@ -20,7 +20,7 @@ var ctrlUsers = require("../controllers/users");
 //router.delete('/reviews/:reviewid/reviews/:reviewid', ctrlReviews.reviewsDeleteOne);
 
 // Users API
-//router.get('/users', ctrlUsers.usersList);
-
+router.get('/users', ctrlUsers.usersList);
+router.post('/users', ctrlUsers.userCreate);
 
 module.exports = router;

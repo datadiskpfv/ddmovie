@@ -1,0 +1,1 @@
+mongoimport --db ddmovies --collection movies --type csv --headerline --file test_data.csv
