@@ -20,8 +20,15 @@ var ctrlUsers = require("../controllers/users");
 //router.delete('/reviews/:reviewid/reviews/:reviewid', ctrlReviews.reviewsDeleteOne);
 
 // Users API
-router.get('/users', ctrlUsers.usersList);
 router.post('/users', ctrlUsers.userCreate);
-router.get('/users/:useremail/email', ctrlUsers.userEmailReadOne);
+
+router.get('/users', ctrlUsers.usersList);
+router.get('/users/id/:userId', ctrlUsers.userIdReadOne);
+router.get('/users/email/:emailAddress', ctrlUsers.userEmailReadOne);
+router.get('/users/search/:searchString', ctrlUsers.usersSearch);
+
+router.put('/users/:userId', ctrlUsers.userUpdateOne);
+
+router.post('/users/:userId', ctrlUsers.userDeleteOne);
 
 module.exports = router;

@@ -45,13 +45,48 @@ describe('API User list test', () => {
       });
   });
 
-  it.only('can list a specific user by using an email address', (done) => {
+  it('can list a specific user by using an email address', (done) => {
     server
-      .get("/ddmovie_api/users/paul.valle@datadisk.co.uk/email")
+      .get("/ddmovie_api/users/email/paul.valle@datadisk.co.uk")
       .end(function (err, res) {
-        console.log('RES: ' + util.inspect(res.body));
+        // check that user has been retrieved
+        assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
+        assert.equal(res.body[0].password, 'password99');
+        assert.equal(res.body[0].role, 'admin');
         done();
       });
   });
+
+  it('can search for a specific user (email)', (done) => {
+    server
+      .get("/ddmovie_api/users/search/paul")
+      .end(function (err, res) {
+        // check that user has been retrieved
+        assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
+        assert.equal(res.body[0].password, 'password99');
+        assert.equal(res.body[0].role, 'admin');
+      });
+
+    server
+      .get("/ddmovie_api/users/search/lorraine")
+      .end(function (err, res) {
+        // check that user has been retrieved
+        assert.equal(res.body[0].email, 'lorraine.valle@datadisk.co.uk');
+        assert.equal(res.body[0].password, 'password88');
+        assert.equal(res.body[0].role, 'user');
+        done();
+      });
+  });
+
+  it('can search for a number of users (email)', (done) => {
+    server
+      .get("/ddmovie_api/users/search/l")
+      .end(function (err, res) {
+        // check that user has been retrieved
+        assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
+        assert.equal(res.body[1].email, 'lorraine.valle@datadisk.co.uk');
+        done();
+      });
+  })
 
 });

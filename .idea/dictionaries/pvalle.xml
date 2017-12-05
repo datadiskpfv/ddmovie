@@ -5,6 +5,7 @@
       <w>ddmovies</w>
       <w>movietitle</w>
       <w>reviewid</w>
+      <w>userid</w>
     </words>
   </dictionary>
 </component>

@@ -4,7 +4,7 @@ var User = mongoose.model('user');
 var util = require('util');
 
 /******************/
-/* Listing Users */
+/* List All Users */
 /******************/
 
 /* returns an array of objects */
@@ -32,25 +32,71 @@ module.exports.usersList = function(req, res) {
 /* Find User by email */
 /**********************/
 module.exports.userEmailReadOne = function(req, res) {
-  console.log('Finding One User using email:', req.params.useremail);
-  if (req.params && req.params.useremail) {
+  console.log('Finding One User using email:', req.params.emailAddress);
+  if (req.params && req.params.emailAddress) {
     User
-      .find({email: req.params.useremail})
-      .exec(function(err, user) {
+      .find({email: req.params.emailAddress})
+      .then(user => {
         if (!user) {
-          res.status(404).json({ "message": "user not found" + err});
-          return;
-        } else if (err) {
-          console.log(err);
-          res.status(404).json({ "message": "user not found" + err});
-          return;
+          res.status(404).json({"message": "user not found" + err});
+        } else  {
+          res.status(200).json(user);
         }
-        res.status(200).json(user);
+      })
+      .catch(error => {
+        console.log('ERROR: ' + error);
+        res.status(404).json({"message": "Error: " + error});
       });
   } else {
     console.log('No email address specified');
-    res.status(404).json({ "message": "No email address in request"});
+    res.status(404).json({"message": "No email address in request"});
   }
+};
+
+/********************************/
+/* Searching for a User (email) */
+/********************************/
+module.exports.usersSearch = function(req, res) {
+  console.log('Find User ', req.params.searchString);
+
+  // Using promises
+  User.find({email: {"$regex": req.params.searchString, $options: "i"}})
+    .then( users => {      // movies will contain any movies found
+      if(!users) {
+        console.log('404 no users found');
+        res.status(404).json({ "message": "No users found"});
+      } else {
+        console.log('200 found users');
+        res.status(200).json(users)
+      }
+    })
+    .catch( error => {
+      console.log('404 error with search statement');
+      res.status(404).json(error)
+    });
+};
+
+/********************************/
+/* Searching for a User (id) */
+/********************************/
+module.exports.userIdReadOne = function(req, res) {
+  console.log('Find User ', req.params.userId);
+
+  // Using promises
+  User.findById(req.params.userId)
+    .then( users => {      // movies will contain any movies found
+      if(!users) {
+        console.log('404 no users found');
+        res.status(404).json({ "message": "No users found"});
+      } else {
+        console.log('200 found users');
+        res.status(200).json(users)
+      }
+    })
+    .catch( error => {
+      console.log('404 error with search statement');
+      res.status(404).json(error)
+    });
 };
 
 /********************/
@@ -75,4 +121,78 @@ module.exports.userCreate = function(req, res) {
       res.status(201).json(user)
     }
   });
+};
+
+
+/********************/
+/* Deleting a Movie */
+/********************/
+
+/* Delete a movie in the database, must pass in an ID */
+module.exports.userDeleteOne = function(req, res) {
+  console.log('User ID: ' + req.params.userId);
+
+  const userid = req.params.userId;
+
+  if (userid) {
+    User
+      .findByIdAndRemove(userid)
+      .then( () => {
+        console.log('User deleted');
+        res.status(204).json();
+      })
+      .catch( error => {
+        console.log('ERROR: ' + error);
+        res.status(404).json(error);
+      });
+  } else {
+    console.log('No User Id');
+    res.status(404).json({ "message": "No userid"});
+  }
+};
+
+/********************/
+/* Updating a Movie */
+/********************/
+
+/* Update a movie */
+module.exports.userUpdateOne = function(req, res) {
+
+  console.log('Updating User');
+
+  // make sure we have a user ID, otherwise it pointless to go on
+  if (!req.params.userId) {
+    console.log('No User Id');
+    res.status(404).json({ "message": "No User id"});
+  }
+
+  // first we get the movie object using the ID, then update the movie object and then save it back to the DB
+  User
+    .findById(req.params.userId)
+    .select('-reviews -createdOn')        // everything but reviews and ratings
+    .then( user => {
+      if (!user) {
+        res.status(404).json({"message": "user not found"});
+      } else {
+        user.email = req.body.email;
+        user.password = req.body.password;
+        user.role = req.body.role;
+        user.accountActive = req.body.accountActive;
+
+        user.save(function(err, user) {
+          if (err) {
+            console.log('User NOT updated');
+            res.status(404).json(err);
+          } else {
+            console.log('Movie updated');
+            res.status(200).json(user);
+          }
+        });
+      }
+    })
+    .catch( error => {
+      console.log('404 error with update statement');
+      res.status(404).json(error);
+    });
+
 };
