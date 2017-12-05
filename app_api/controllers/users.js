@@ -11,9 +11,7 @@ var util = require('util');
 module.exports.usersList = function(req, res) {
   console.log('Finding all Users (added promises)', req.params);
 
-
   // Using promises
-
   User.find()
     .then( users => {      // movies will contain any movies found
       if(!users) {
@@ -28,6 +26,31 @@ module.exports.usersList = function(req, res) {
       console.log('404 error with find statement');
       res.status(404).json(error);
     });
+};
+
+/**********************/
+/* Find User by email */
+/**********************/
+module.exports.userEmailReadOne = function(req, res) {
+  console.log('Finding One User using email:', req.params.useremail);
+  if (req.params && req.params.useremail) {
+    User
+      .find({email: req.params.useremail})
+      .exec(function(err, user) {
+        if (!user) {
+          res.status(404).json({ "message": "user not found" + err});
+          return;
+        } else if (err) {
+          console.log(err);
+          res.status(404).json({ "message": "user not found" + err});
+          return;
+        }
+        res.status(200).json(user);
+      });
+  } else {
+    console.log('No email address specified');
+    res.status(404).json({ "message": "No email address in request"});
+  }
 };
 
 /********************/

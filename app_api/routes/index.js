@@ -22,5 +22,6 @@ var ctrlUsers = require("../controllers/users");
 // Users API
 router.get('/users', ctrlUsers.usersList);
 router.post('/users', ctrlUsers.userCreate);
+router.get('/users/:useremail/email', ctrlUsers.userEmailReadOne);
 
 module.exports = router;

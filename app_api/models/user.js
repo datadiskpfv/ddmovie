@@ -4,7 +4,9 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   email: {type: String, required: [true, 'email address required']},
   password: {type: String, required: [true, 'password required']},
-  role: {type: String, enum: ['user', 'admin'], default: "user", required: [true, 'role required'] }
+  role: {type: String, enum: ['user', 'admin'], default: "user", required: [true, 'role required'] },
+  createdOn: {type: Date, default: Date.now},
+  accountActive: {type: Boolean, default: true}
 });
 
 // virtual types are not saved to the DB and are run on the fly

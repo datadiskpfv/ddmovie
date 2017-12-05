@@ -4,9 +4,9 @@ const util = require('util');
 
 const server = supertest.agent("http://localhost:3000");
 
-describe('API User test', () => {
+describe('API User create test', () => {
 
-  it.only('can create a User', (done) => {
+  it('can create a User', (done) => {
 
     let user = {
       email: 'paul.valle@datadisk.co.uk',
