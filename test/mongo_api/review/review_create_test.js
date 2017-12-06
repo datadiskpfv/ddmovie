@@ -25,7 +25,6 @@ describe('API Review create test', () => {
   });
 
   it('can create a review adding a user id', (done) => {
-    console.log('User ID: ' + userId);
 
     let data = {
       content: 'First review testing the create process',

@@ -20,7 +20,6 @@ describe('API Movie create test', () => {
       .post("/ddmovie_api/movies")
       .send(data)
       .end(function (err, res) {
-        console.log('Error: ' + err);
         done();
       })
   })

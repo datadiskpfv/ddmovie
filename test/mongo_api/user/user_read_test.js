@@ -15,9 +15,7 @@ describe('API User read test', () => {
     server
       .post("/ddmovie_api/users")
       .send({email: 'lorraine.valle@datadisk.co.uk', password: 'password88', role: 'user'})
-      .end(function(err, res) {} );
-
-    done();
+      .end(function(err, res) {done();} );
   });
 
   it('can list all Users', (done) => {

@@ -45,7 +45,7 @@ describe('API User update test', () => {
             server
               .get("/ddmovie_api/users/email/paul.valley@datadisk.co.uk")
               .end(function (err, res) {
-                console.log('User Count (after): ' + res.body.length);
+                //console.log('User Count (after): ' + res.body.length);
                 assert.equal(res.body[0].email, 'paul.valley@datadisk.co.uk');
                 assert.equal(res.body[0].password, 'update-password');
                 assert.equal(res.body[0].role, 'user');
