@@ -15,6 +15,10 @@ before((done) => {
 beforeEach((done) => {
   mongoose.connection.db.dropCollection('users', () =>{
     //console.log('User collection dropped');
+  });
+
+  mongoose.connection.db.dropCollection('reviews', () =>{
+    //console.log('Review collection dropped');
     done();
   });
 });

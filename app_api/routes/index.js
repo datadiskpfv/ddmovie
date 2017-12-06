@@ -13,9 +13,9 @@ var ctrlUsers = require("../controllers/users");
 //router.get('/movies/search/:movietitle', ctrlMovies.moviesSearch);
 
 // Reviews API
-//router.get('/reviews/:movieid/', ctrlReviews.reviewsList);
+router.post('/reviews/', ctrlReviews.reviewCreate);
 
-//router.post('/reviews/:reviewid/reviews', ctrlReviews.reviewsCreate);
+router.get('/reviews/userid/:userid/', ctrlReviews.reviewsUserIdList);
 //router.put('/reviews/:reviewid/reviews/:reviewid', ctrlReviews.reviewsUpdateOne);
 //router.delete('/reviews/:reviewid/reviews/:reviewid', ctrlReviews.reviewsDeleteOne);
 

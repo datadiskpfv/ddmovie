@@ -13,7 +13,7 @@ module.exports.usersList = function(req, res) {
 
   // Using promises
   User.find()
-    .then( users => {      // movies will contain any movies found
+    .then( users => {      // users will contain any users found
       if(!users) {
         console.log('404 no users found');
         res.status(200).json({ "message": "no users found" + err });
@@ -61,7 +61,7 @@ module.exports.usersSearch = function(req, res) {
 
   // Using promises
   User.find({email: {"$regex": req.params.searchString, $options: "i"}})
-    .then( users => {      // movies will contain any movies found
+    .then( users => {      // users will contain any users found
       if(!users) {
         console.log('404 no users found');
         res.status(404).json({ "message": "No users found"});
@@ -84,7 +84,7 @@ module.exports.userIdReadOne = function(req, res) {
 
   // Using promises
   User.findById(req.params.userId)
-    .then( users => {      // movies will contain any movies found
+    .then( users => {      // users will contain any users found
       if(!users) {
         console.log('404 no users found');
         res.status(404).json({ "message": "No users found"});
@@ -103,7 +103,7 @@ module.exports.userIdReadOne = function(req, res) {
 /* Creating a User */
 /********************/
 
-/* Create a movie in the database */
+/* Create a user in the database */
 module.exports.userCreate = function(req, res) {
   console.log('API userCreate: ');
   var user = new User(req.body);
@@ -125,10 +125,10 @@ module.exports.userCreate = function(req, res) {
 
 
 /********************/
-/* Deleting a Movie */
+/* Deleting a User */
 /********************/
 
-/* Delete a movie in the database, must pass in an ID */
+/* Delete a user in the database, must pass in an ID */
 module.exports.userDeleteOne = function(req, res) {
   console.log('User ID: ' + req.params.userId);
 
@@ -152,10 +152,9 @@ module.exports.userDeleteOne = function(req, res) {
 };
 
 /********************/
-/* Updating a Movie */
+/* Updating a user */
 /********************/
 
-/* Update a movie */
 module.exports.userUpdateOne = function(req, res) {
 
   console.log('Updating User');
@@ -166,7 +165,7 @@ module.exports.userUpdateOne = function(req, res) {
     res.status(404).json({ "message": "No User id"});
   }
 
-  // first we get the movie object using the ID, then update the movie object and then save it back to the DB
+  // first we get the user object using the ID, then update the user object and then save it back to the DB
   User
     .findById(req.params.userId)
     .select('-reviews -createdOn')        // everything but reviews and ratings
@@ -184,7 +183,7 @@ module.exports.userUpdateOne = function(req, res) {
             console.log('User NOT updated');
             res.status(404).json(err);
           } else {
-            console.log('Movie updated');
+            console.log('User updated');
             res.status(200).json(user);
           }
         });

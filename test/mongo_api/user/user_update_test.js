@@ -13,7 +13,7 @@ describe('API User update test', () => {
       .end(function (err, res) {done();});
   });
 
-  it.only('can update a specific user', (done) => {
+  it('can update a specific user', (done) => {
 
     // because its all async we have to nest each test to make sure
     // that the task has completed before moving onto the next task
