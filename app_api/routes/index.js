@@ -5,10 +5,11 @@ var ctrlReviews = require("../controllers/reviews");
 var ctrlUsers = require("../controllers/users");
 
 // Movies API
-//router.get('/movies', ctrlMovies.moviesList);
-//router.post('/movies', ctrlMovies.moviesCreate);
+router.post('/movies', ctrlMovies.movieCreate);
+
+router.get('/movies', ctrlMovies.moviesList);
 //router.post('/movies/:movieid', ctrlMovies.moviesDeleteOne);
-//router.get('/movies/:movieid', ctrlMovies.moviesReadOne);
+router.get('/movies/id/:movieid', ctrlMovies.moviesReadOne);
 //router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
 //router.get('/movies/search/:movietitle', ctrlMovies.moviesSearch);
 

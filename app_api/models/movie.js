@@ -9,8 +9,9 @@ const movieSchema = new Schema({
   movie_rating: {type: String, enum: ['U', 'PG', '12', '15', '18'], required: [true, 'Movie Rating is required']},
   genre: {type: String, required: [true, 'Genre is required']},
   description: {type: String, minlength: minlength, maxlength: maxlength, required: [true, 'Description is required']},
-  image_name: {type: String, required: [true, 'Image Name is required']},
-  avgReviewRating: {type: Number}
+  imageName: {type: String, required: [true, 'Image Name is required']},
+  avgReviewRating: {type: Number, default: 0},
+  reviews: {type: Schema.Types.ObjectId, ref: 'review'}
 });
 
 // model name, schema, mongo db collection name (optional)

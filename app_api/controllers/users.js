@@ -36,6 +36,7 @@ module.exports.userEmailReadOne = function(req, res) {
   if (req.params && req.params.emailAddress) {
     User
       .find({email: req.params.emailAddress})
+      .sort('email')
       .then(user => {
         if (!user) {
           res.status(404).json({"message": "user not found" + err});
@@ -53,14 +54,15 @@ module.exports.userEmailReadOne = function(req, res) {
   }
 };
 
-/********************************/
-/* Searching for a User (email) */
-/********************************/
+/****************************************/
+/* Searching for a User (search string) */
+/****************************************/
 module.exports.usersSearch = function(req, res) {
   console.log('Find User ', req.params.searchString);
 
   // Using promises
   User.find({email: {"$regex": req.params.searchString, $options: "i"}})
+    .sort('email')
     .then( users => {      // users will contain any users found
       if(!users) {
         console.log('404 no users found');

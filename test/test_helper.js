@@ -19,6 +19,10 @@ beforeEach((done) => {
 
   mongoose.connection.db.dropCollection('reviews', () =>{
     //console.log('Review collection dropped');
+  });
+
+  mongoose.connection.db.dropCollection('movies', () =>{
+    //console.log('Movie collection dropped');
     done();
   });
 });

@@ -4,7 +4,7 @@ const util = require('util');
 
 const server = supertest.agent("http://localhost:3000");
 
-describe('API User list test', () => {
+describe('API User read test', () => {
 
   beforeEach( (done) => {
     server
@@ -83,10 +83,9 @@ describe('API User list test', () => {
       .get("/ddmovie_api/users/search/l")
       .end(function (err, res) {
         // check that user has been retrieved
-        assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
-        assert.equal(res.body[1].email, 'lorraine.valle@datadisk.co.uk');
+        assert.equal(res.body[0].email, 'lorraine.valle@datadisk.co.uk');
+        assert.equal(res.body[1].email, 'paul.valle@datadisk.co.uk');
         done();
       });
   })
-
 });
