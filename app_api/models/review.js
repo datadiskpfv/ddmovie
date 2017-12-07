@@ -8,7 +8,7 @@ const reviewSchema = new Schema({
   content: {type: String, minlength: minlength, maxlength: maxlength, required: [true, 'content required']},
   rating: {type: Number, min: 1, max: 5, required: [true, 'Rating required'] },
   createdOn: {type: Date, default: Date.now},
-  //movieId: {type: Schema.Types.ObjectId, ref: 'Movie'},
+  movieId: {type: Schema.Types.ObjectId, ref: 'Movie'},
   userId: {type: Schema.Types.ObjectId, ref: 'user'}
 
 });

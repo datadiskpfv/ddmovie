@@ -17,7 +17,7 @@ module.exports.movieCreate = function(req, res) {
       res.status(400).json(err);
     } else {
       console.log('Movie saved to database: ' + movie);
-      res.status(201).json(err);
+      res.status(201).json(movie);
     }
   });
 };
@@ -119,11 +119,65 @@ module.exports.moviesGenreSearch = function(req, res) {
     });
 };
 
+/****************************************************/
+/* Searching for Movie titles and populating */
+/****************************************************/
+module.exports.moviesPopulateSearch = function(req, res) {
+  console.log('Find Movies with title', req.params.searchString);
+
+  Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
+    .sort('title')
+    .populate()
+    .then( movie => {      // movies will contain any movies found
+      if(!movie) {
+        console.log('404 no movies found');
+        res.status(404).json({ "message": "no movies found" + err })
+      } else {
+        console.log('200 found movie');
+        res.status(200).json(movie)
+      }
+    })
+    .catch( error => {
+      console.log('404 error with search statement');
+      res.status(404).json(error);
+    });
+};
+
+/******************************/
+/* Adding a review to a Movie */
+/******************************/
+
+/* Update a movie */
+module.exports.movieAddReview = function(req, res) {
+  // make sure we have a movie ID, otherwise it pointless to go on
+  //if (!req.params.movieId || !req.body.reviewId) {
+  //  res.status(404).json({"message": "Not found, movieid and reviewid are required" });
+  //}
+
+  // first we get the movie object using the ID, then update the movie object and then save it back to the DB
+  Movie
+    .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true},
+      function(err, movie) {
+        if (!movie) {
+          console.log('Add Review Status: 404')
+          res.status(404).json({"message": "Movie not found" });
+        } else if (err) {
+          console.log('Add Review Error')
+          res.status(404).json(err);
+        } else {
+          console.log('Movie Review Updated: ' + movie);
+          res.status(200).json(movie);
+        }
+      }
+    );
+};
+
 /********************/
 /* Updating a Movie */
 /********************/
 
 /* Update a movie */
+/*
 module.exports.moviesUpdateOne = function(req, res) {
   // make sure we have a movie ID, otherwise it pointless to go on
   if (!req.params.movieid) {
@@ -132,8 +186,7 @@ module.exports.moviesUpdateOne = function(req, res) {
 
   // first we get the movie object using the ID, then update the movie object and then save it back to the DB
   Movie
-    .findById(req.params.movieid)
-    .select('-reviews -avgReviewRating')         // everything but reviews
+    .findByIdAndUpdate(req.params.movieid, {$push: {reviews: req.body.reviewId}})
     .exec(
       function(err, movie) {
         if (!movie) {
@@ -142,11 +195,13 @@ module.exports.moviesUpdateOne = function(req, res) {
           res.status(404).json(err);
         }
 
-        movie.title = req.body.title;
-        movie.movie_rating = req.body.movie_rating;
-        movie.genre = req.body.genre;
-        movie.description = req.body.description;
-        movie.imageName = req.body.imageName;
+        //movie.title = req.body.title;
+        //movie.movie_rating = req.body.movie_rating;
+        //movie.genre = req.body.genre;
+        //movie.description = req.body.description;
+        //movie.imageName = req.body.imageName;
+
+        movie.reviews.push(req.body.reviewId);
 
         movie.save(function(err, movie) {
           if (err) {
@@ -160,6 +215,7 @@ module.exports.moviesUpdateOne = function(req, res) {
       }
     );
 };
+*/
 
 
 

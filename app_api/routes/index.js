@@ -10,9 +10,11 @@ router.post('/movies', ctrlMovies.movieCreate);
 router.get('/movies', ctrlMovies.moviesList);
 router.get('/movies/search/title/:searchString', ctrlMovies.moviesTitleSearch);
 router.get('/movies/search/genre/:searchString', ctrlMovies.moviesGenreSearch);
+router.get('/movies/search/populate/:searchString', ctrlMovies.moviesPopulateSearch);
 router.get('/movies/id/:movieid', ctrlMovies.moviesReadOne);
 
-router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
+//router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
+router.put('/movies/review/:movieId', ctrlMovies.movieAddReview);
 
 router.post('/movies/:movieid', ctrlMovies.moviesDeleteOne);
 
