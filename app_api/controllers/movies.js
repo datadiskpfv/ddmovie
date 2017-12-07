@@ -155,6 +155,7 @@ module.exports.movieAddReview = function(req, res) {
   //}
 
   // first we get the movie object using the ID, then update the movie object and then save it back to the DB
+  // the new returns a updated movie back to the calling callback
   Movie
     .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true},
       function(err, movie) {
@@ -177,16 +178,15 @@ module.exports.movieAddReview = function(req, res) {
 /********************/
 
 /* Update a movie */
-/*
 module.exports.moviesUpdateOne = function(req, res) {
   // make sure we have a movie ID, otherwise it pointless to go on
-  if (!req.params.movieid) {
+  if (!req.params.movieId) {
     res.status(404).json({"message": "Not found, movieid is required" });
   }
 
   // first we get the movie object using the ID, then update the movie object and then save it back to the DB
   Movie
-    .findByIdAndUpdate(req.params.movieid, {$push: {reviews: req.body.reviewId}})
+    .findById(req.params.movieId)
     .exec(
       function(err, movie) {
         if (!movie) {
@@ -195,13 +195,11 @@ module.exports.moviesUpdateOne = function(req, res) {
           res.status(404).json(err);
         }
 
-        //movie.title = req.body.title;
-        //movie.movie_rating = req.body.movie_rating;
-        //movie.genre = req.body.genre;
-        //movie.description = req.body.description;
-        //movie.imageName = req.body.imageName;
-
-        movie.reviews.push(req.body.reviewId);
+        movie.title = req.body.title;
+        movie.movie_rating = req.body.movie_rating;
+        movie.genre = req.body.genre;
+        movie.description = req.body.description;
+        movie.imageName = req.body.imageName;
 
         movie.save(function(err, movie) {
           if (err) {
@@ -215,7 +213,7 @@ module.exports.moviesUpdateOne = function(req, res) {
       }
     );
 };
-*/
+
 
 
 

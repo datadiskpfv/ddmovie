@@ -13,7 +13,7 @@ router.get('/movies/search/genre/:searchString', ctrlMovies.moviesGenreSearch);
 router.get('/movies/search/populate/:searchString', ctrlMovies.moviesPopulateSearch);
 router.get('/movies/id/:movieid', ctrlMovies.moviesReadOne);
 
-//router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
+router.put('/movies/:movieId', ctrlMovies.moviesUpdateOne);
 router.put('/movies/review/:movieId', ctrlMovies.movieAddReview);
 
 router.post('/movies/:movieid', ctrlMovies.moviesDeleteOne);

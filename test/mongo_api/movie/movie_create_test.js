@@ -14,6 +14,7 @@ describe('API Movie create test', () => {
       genre: 'Horror',
       description: 'A space horror film',
       imageName: 'aliens',
+      reviews: []
     }
 
     server

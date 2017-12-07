@@ -77,7 +77,7 @@ describe('API Review create test', () => {
       });
   });
 
-  it.only('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
+  it('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
 
     // http://127.0.0.1:3000/ddmovie_api/movies/search/populate/a
     done();
