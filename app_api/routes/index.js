@@ -8,10 +8,13 @@ var ctrlUsers = require("../controllers/users");
 router.post('/movies', ctrlMovies.movieCreate);
 
 router.get('/movies', ctrlMovies.moviesList);
-//router.post('/movies/:movieid', ctrlMovies.moviesDeleteOne);
+router.get('/movies/search/title/:searchString', ctrlMovies.moviesTitleSearch);
+router.get('/movies/search/genre/:searchString', ctrlMovies.moviesGenreSearch);
 router.get('/movies/id/:movieid', ctrlMovies.moviesReadOne);
-//router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
-//router.get('/movies/search/:movietitle', ctrlMovies.moviesSearch);
+
+router.put('/movies/:movieid', ctrlMovies.moviesUpdateOne);
+
+router.post('/movies/:movieid', ctrlMovies.moviesDeleteOne);
 
 // Reviews API
 router.post('/reviews/', ctrlReviews.reviewCreate);

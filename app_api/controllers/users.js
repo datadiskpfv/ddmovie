@@ -13,6 +13,7 @@ module.exports.usersList = function(req, res) {
 
   // Using promises
   User.find()
+    .sort('email')
     .then( users => {      // users will contain any users found
       if(!users) {
         console.log('404 no users found');

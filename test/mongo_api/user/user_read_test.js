@@ -31,14 +31,15 @@ describe('API User read test', () => {
         }
 
         // check that user has been retrieved
-        assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
-        assert.equal(res.body[0].password, 'password99');
-        assert.equal(res.body[0].role, 'admin');
+        assert.equal(res.body[0].email, 'lorraine.valle@datadisk.co.uk');
+        assert.equal(res.body[0].password, 'password88');
+        assert.equal(res.body[0].role, 'user');
 
         // check that user has been retrieved
-        assert.equal(res.body[1].email, 'lorraine.valle@datadisk.co.uk');
-        assert.equal(res.body[1].password, 'password88');
-        assert.equal(res.body[1].role, 'user');
+        assert.equal(res.body[1].email, 'paul.valle@datadisk.co.uk');
+        assert.equal(res.body[1].password, 'password99');
+        assert.equal(res.body[1].role, 'admin');
+
         done();
       });
   });
