@@ -123,17 +123,17 @@ module.exports.moviesGenreSearch = function(req, res) {
 /* Searching for Movie titles and populating */
 /****************************************************/
 module.exports.moviesPopulateSearch = function(req, res) {
-  console.log('Find Movies with title', req.params.searchString);
+  console.log('Find Movies with title and populating', req.params.searchString);
 
   Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
+    .populate('reviews')
     .sort('title')
-    .populate()
     .then( movie => {      // movies will contain any movies found
       if(!movie) {
         console.log('404 no movies found');
         res.status(404).json({ "message": "no movies found" + err })
       } else {
-        console.log('200 found movie');
+        console.log('200 found movie: ' + movie);
         res.status(200).json(movie)
       }
     })

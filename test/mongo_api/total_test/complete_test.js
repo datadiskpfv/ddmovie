@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const supertest = require("supertest");
 const assert = require('assert');
 const util = require('util');
@@ -44,8 +45,8 @@ describe('API Review create test', () => {
             let review_data = {
               content: 'Complete test of movie, user and review',
               rating: 5,
-              userId: userId,
-              movieId: movieId
+              userId: mongoose.Types.ObjectId(userId),
+              movieId: mongoose.Types.ObjectId(movieId)
             }
 
             server
@@ -57,7 +58,7 @@ describe('API Review create test', () => {
 
                 // update movie with review ID
                 let movie_update_data = {
-                  reviewId: reviewId,
+                  reviewId: mongoose.Types.ObjectId(reviewId),
                 }
 
                 server
@@ -77,9 +78,13 @@ describe('API Review create test', () => {
       });
   });
 
-  it('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
+  it.only('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
 
-    // http://127.0.0.1:3000/ddmovie_api/movies/search/populate/a
+    server
+      .get("/ddmovie_api/movies/search/populate/a")
+      .end(function(err,res){
+        console.log('RES: ' + util.inspect(res.body, false, 3));
+      })
     done();
   })
 

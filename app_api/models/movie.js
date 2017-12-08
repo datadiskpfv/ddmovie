@@ -11,7 +11,7 @@ const movieSchema = new Schema({
   description: {type: String, minlength: minlength, maxlength: maxlength, required: [true, 'Description is required']},
   imageName: {type: String, required: [true, 'Image Name is required']},
   avgReviewRating: {type: Number, default: 0},
-  reviews: {type: Schema.Types.ObjectId, ref: 'review'}
+  reviews: [{type: Schema.Types.ObjectId, ref: 'review'}]
 });
 
 // model name, schema, mongo db collection name (optional)

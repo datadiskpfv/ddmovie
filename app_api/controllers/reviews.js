@@ -33,7 +33,8 @@ module.exports.reviewsUserIdList = function(req, res) {
 
   // Using promises
   Review.find({userId: req.params.userid})
-    .populate('userId._id')       // to get everything back (user details) remove ._id
+    .populate('userId')       // to get everything back (user details) remove ._id
+    .populate('movieId')       // to get everything back (user details) remove ._id
     .sort('-createdOn')           // - (minus) means DESC
     .then( reviews => {           // reviews will contain any reviews found
       if(!reviews) {
