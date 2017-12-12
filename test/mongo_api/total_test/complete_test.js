@@ -5,7 +5,7 @@ const util = require('util');
 
 const server = supertest.agent("http://localhost:3000");
 
-describe('API Review create test', () => {
+describe('API Complete test', () => {
 
   beforeEach ( (done) => {
 
@@ -66,10 +66,10 @@ describe('API Review create test', () => {
                   .send(movie_update_data)
                   .end(function(err, res){
 
-                    console.log('Movie ID: ' + movieId);
-                    console.log('User ID: ' + userId);
-                    console.log('Review ID: ' + reviewId);
-                    console.log('Updated: ' + res.body.title);
+                    //console.log('Movie ID: ' + movieId);
+                    //console.log('User ID: ' + userId);
+                    //console.log('Review ID: ' + reviewId);
+                    //console.log('Updated: ' + res.body.title);
 
                     done();
                   });
@@ -83,9 +83,22 @@ describe('API Review create test', () => {
     server
       .get("/ddmovie_api/movies/search/populate/a")
       .end(function(err,res){
-        console.log('RES: ' + util.inspect(res.body, false, 3));
+        console.log('RES: ' + util.inspect(res.body, false, 4));
+
+        // movie test
+        assert.equal(res.body[0].title, 'Aliens - Complete');
+        assert.equal(res.body[0].genre, 'Horror');
+
+        // movie review test
+        assert.equal(res.body[0].reviews[0].content, 'Complete test of movie, user and review');
+        assert.equal(res.body[0].reviews[0].rating, 5);
+
+        // movie review user test
+        assert.equal(res.body[0].reviews[0].userId.email, 'paul.valle@datadisk.co.uk');
+        assert.equal(res.body[0].reviews[0].userId.role, 'admin');
+        done();
       })
-    done();
+
   })
 
 });

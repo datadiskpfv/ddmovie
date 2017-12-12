@@ -126,7 +126,10 @@ module.exports.moviesPopulateSearch = function(req, res) {
   console.log('Find Movies with title and populating', req.params.searchString);
 
   Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
-    .populate('reviews')
+    .populate({
+      path : 'reviews',
+      populate : { path: 'userId'}
+    })
     .sort('title')
     .then( movie => {      // movies will contain any movies found
       if(!movie) {
