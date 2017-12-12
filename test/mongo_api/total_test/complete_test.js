@@ -98,7 +98,5 @@ describe('API Complete test', () => {
         assert.equal(res.body[0].reviews[0].userId.role, 'admin');
         done();
       })
-
   })
-
 });
