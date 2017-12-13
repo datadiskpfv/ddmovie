@@ -24,7 +24,6 @@ module.exports.movieCreate = function(req, res) {
 /******************/
 /* Listing Movies */
 /******************/
-
 /* returns an array of objects */
 module.exports.moviesList = function(req, res) {
   console.log('Finding all Movies (added promises)', req.params);
@@ -53,25 +52,20 @@ module.exports.moviesList = function(req, res) {
 module.exports.moviesReadOne = function(req, res) {
   /** @param {String} req.movie.movieid */
   console.log('Finding One Movie using ID:', req.params.movieid);
-  if (req.params && req.params.movieid) {
+  if (req.params.movieid) {
     Movie
       .findById(req.params.movieid)
-      .then( movie => {      // movies will contain any movies found
-        if (movie) {
-          console.log('200 found movie');
-          res.status(200).json(movie);
-        } else {
-          console.log('404 no movies found');
-          res.status(404).json({"message": "no movie found" + err})
-        }
+      .then( movie => {      // will only return one movie if found
+        console.log('200 found movie');
+        res.status(200).json(movie);
       })
       .catch( error => {
         console.log('404 error with find statement');
         res.status(404).json(error);
       });
   } else {
-    console.log('No id specified');
-    res.status(404).json({ "message": "No id in request" })
+    console.log('No movieid specified');
+    res.status(404).json({ "message": "No movieid in request" })
   }
 };
 
@@ -153,66 +147,51 @@ module.exports.moviesPopulateSearch = function(req, res) {
 module.exports.movieAddReview = function(req, res) {
   // first we get the movie object using the ID, then update the movie object and then save it back to the DB
   // the new returns a updated movie back to the calling callback
-  Movie
-    .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true})
-    .then( movie => {
-      console.log('Movie Review Updated: ' + movie);
-      res.status(200).json(movie);
-    })
-    .catch( error => {
-      console.log('Add Review Error or movie not found ' + error);
-      res.status(404).json(err);
-    })
+  if (req.params.movieId) {
+    Movie
+      .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true})
+      .then(movie => {
+        console.log('Movie Review Updated: ' + movie);
+        res.status(200).json(movie);
+      })
+      .catch(error => {
+        console.log('Add Review Error or movie not found ' + error);
+        res.status(404).json(err);
+      })
+  } else {
+    res.status(404).json({"message": "Not found, movieid is required" });
+  }
 };
 
 /********************/
 /* Updating a Movie */
 /********************/
-
-/* Update a movie */
 module.exports.moviesUpdateOne = function(req, res) {
-  // make sure we have a movie ID, otherwise it pointless to go on
-  if (!req.params.movieId) {
+
+  if (req.params.movieId) {
+    Movie.findByIdAndUpdate(req.params.movieId, req.body)
+      .then(movie => {
+        console.log('Movie updated ' + movie.title);
+        res.status(200).json(movie);
+      })
+      .catch(error => {
+        console.log('Movie NOT updated ' + error);
+        res.status(404).json(error);
+      })
+  } else {
     res.status(404).json({"message": "Not found, movieid is required" });
   }
-
-  Movie.findByIdAndUpdate(req.params.movieId, req.body)
-    .then(movie => {
-      console.log('Movie updated ' + movie.title);
-      res.status(200).json(movie);
-    })
-    .catch( error => {
-      console.log('Movie NOT updated ' + error);
-      res.status(404).json(error);
-    })
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /********************************/
 /* Deleting a Movie using an ID */
 /********************************/
-
 module.exports.moviesDeleteOne = function(req, res) {
   console.log('Movie ID: ' + req.params.movieid);
 
-  const movieid = req.params.movieid;
-
-  if (movieid) {
+  if (req.params.movieid) {
     Movie
-      .findByIdAndRemove(movieid)
+      .findByIdAndRemove(req.params.movieid)
       .then( () => {
         console.log('Movie deleted');
         res.status(200).json()
