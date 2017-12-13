@@ -1,15 +1,11 @@
-const supertest = require("supertest");
-const assert = require('assert');
-const util = require('util');
-
-const server = supertest.agent("http://localhost:3000");
+require('../../common/common.js');
 
 describe('API Movie create test', () => {
 
   it('can create a review adding a user id', (done) => {
 
     let data = {
-      title: 'Aliens',
+      title: 'Aliens - create',
       movie_rating: 18,
       genre: 'Horror',
       description: 'A space horror film',

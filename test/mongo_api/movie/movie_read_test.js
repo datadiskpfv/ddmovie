@@ -1,10 +1,6 @@
-const supertest = require("supertest");
-const assert = require('assert');
-const util = require('util');
+require('../../common/common.js');
 
-const server = supertest.agent("http://localhost:3000");
-
-describe('API Movie create test', () => {
+describe('API Movie read test', () => {
 
   beforeEach( (done) => {
     let data = {
