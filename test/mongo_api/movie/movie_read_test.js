@@ -1,4 +1,4 @@
-require('../../common/common.js');
+const {server, assert, util} = require('../../common/common');
 
 describe('API Movie read test', () => {
 

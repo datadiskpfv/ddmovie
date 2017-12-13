@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-require('../../common/common.js');
+
+const {server, assert, util} = require('../../common/common');
 
 describe('API Complete test', () => {
 
@@ -74,7 +75,7 @@ describe('API Complete test', () => {
       });
   });
 
-  it.only('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
+  it('can perform a COMPLETE test of creating a movie, user and a review', (done) => {
 
     server
       .get("/ddmovie_api/movies/search/populate/a")

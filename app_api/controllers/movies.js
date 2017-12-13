@@ -1,25 +1,24 @@
-var mongoose = require('mongoose');
+// noinspection NpmUsedModulesInstalled
+const mongoose = require('mongoose');
 
-var Movie = mongoose.model('movie');
-var util = require('util');
+let Movie = mongoose.model('movie');
+const util = require('util');
 
 /********************/
 /* Creating a Movie */
 /********************/
 module.exports.movieCreate = function(req, res) {
   console.log('API movieCreate post data: ' + util.inspect(req.body));
-  var movie = new Movie(req.body);
 
-  // look into using create, its a new and save all in one
-  movie.save(function(err, movie) {
-    if (err) {
-      console.log('Error in create: ' + err);
-      res.status(400).json(err);
-    } else {
+  Movie.create(req.body)
+    .then( movie => {
       console.log('Movie saved to database: ' + movie);
       res.status(201).json(movie);
-    }
-  });
+    })
+    .catch( error => {
+      console.log('Error in create: ' + error);
+      res.status(400).json(error);
+    });
 };
 
 /******************/
@@ -33,12 +32,12 @@ module.exports.moviesList = function(req, res) {
   // Using promises
   Movie.find()
     .then( movies => {      // movies will contain any movies found
-      if(!movies) {
-        console.log('404 no movies found');
-        res.status(404).json({ "message": "no movies found" + err })
-      } else {
+      if (movies) {
         console.log('200 found movies');
-        res.status(200).json(movies)
+        res.status(200).json(movies);
+      } else {
+        console.log('404 no movies found');
+        res.status(404).json({"message": "no movies found" + err})
       }
     })
     .catch( error => {
@@ -52,17 +51,18 @@ module.exports.moviesList = function(req, res) {
 /****************************/
 /* returns a single object */
 module.exports.moviesReadOne = function(req, res) {
+  /** @param {String} req.movie.movieid */
   console.log('Finding One Movie using ID:', req.params.movieid);
   if (req.params && req.params.movieid) {
     Movie
       .findById(req.params.movieid)
       .then( movie => {      // movies will contain any movies found
-        if(!movie) {
-          console.log('404 no movies found');
-          res.status(404).json({ "message": "no movie found" + err })
-        } else {
+        if (movie) {
           console.log('200 found movie');
-          res.status(200).json(movie)
+          res.status(200).json(movie);
+        } else {
+          console.log('404 no movies found');
+          res.status(404).json({"message": "no movie found" + err})
         }
       })
       .catch( error => {
@@ -79,16 +79,17 @@ module.exports.moviesReadOne = function(req, res) {
 /* Searching for Movie titles using a search string */
 /****************************************************/
 module.exports.moviesTitleSearch = function(req, res) {
+  /** @param {String} req.movie.searchString */
   console.log('Find Movies with title', req.params.searchString);
 
   Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
     .then( movie => {      // movies will contain any movies found
-      if(!movie) {
-        console.log('404 no movies found');
-        res.status(404).json({ "message": "no movies found" + err })
-      } else {
+      if (movie) {
         console.log('200 found movie');
-        res.status(200).json(movie)
+        res.status(200).json(movie);
+      } else {
+        console.log('404 no movies found');
+        res.status(404).json({"message": "no movies found" + err});
       }
     })
     .catch( error => {
@@ -105,12 +106,12 @@ module.exports.moviesGenreSearch = function(req, res) {
 
   Movie.find({genre: {"$regex": req.params.searchString, $options: "i"}})
     .then( movie => {      // movies will contain any movies found
-      if(!movie) {
-        console.log('404 no movies found');
-        res.status(404).json({ "message": "no movies found" + err })
-      } else {
+      if (movie) {
         console.log('200 found movie');
-        res.status(200).json(movie)
+        res.status(200).json(movie);
+      } else {
+        console.log('404 no movies found');
+        res.status(404).json({"message": "no movies found" + err})
       }
     })
     .catch( error => {
@@ -132,12 +133,12 @@ module.exports.moviesPopulateSearch = function(req, res) {
     })
     .sort('title')
     .then( movie => {      // movies will contain any movies found
-      if(!movie) {
-        console.log('404 no movies found');
-        res.status(404).json({ "message": "no movies found" + err })
-      } else {
+      if (movie) {
         console.log('200 found movie: ' + movie);
-        res.status(200).json(movie)
+        res.status(200).json(movie);
+      } else {
+        console.log('404 no movies found');
+        res.status(404).json({"message": "no movies found" + err});
       }
     })
     .catch( error => {
@@ -149,31 +150,19 @@ module.exports.moviesPopulateSearch = function(req, res) {
 /******************************/
 /* Adding a review to a Movie */
 /******************************/
-
-/* Update a movie */
 module.exports.movieAddReview = function(req, res) {
-  // make sure we have a movie ID, otherwise it pointless to go on
-  //if (!req.params.movieId || !req.body.reviewId) {
-  //  res.status(404).json({"message": "Not found, movieid and reviewid are required" });
-  //}
-
   // first we get the movie object using the ID, then update the movie object and then save it back to the DB
   // the new returns a updated movie back to the calling callback
   Movie
-    .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true},
-      function(err, movie) {
-        if (!movie) {
-          console.log('Add Review Status: 404')
-          res.status(404).json({"message": "Movie not found" });
-        } else if (err) {
-          console.log('Add Review Error')
-          res.status(404).json(err);
-        } else {
-          console.log('Movie Review Updated: ' + movie);
-          res.status(200).json(movie);
-        }
-      }
-    );
+    .findByIdAndUpdate(req.params.movieId, {$push: {reviews: req.body.reviewId}}, {'new': true})
+    .then( movie => {
+      console.log('Movie Review Updated: ' + movie);
+      res.status(200).json(movie);
+    })
+    .catch( error => {
+      console.log('Add Review Error or movie not found ' + error);
+      res.status(404).json(err);
+    })
 };
 
 /********************/
@@ -187,34 +176,15 @@ module.exports.moviesUpdateOne = function(req, res) {
     res.status(404).json({"message": "Not found, movieid is required" });
   }
 
-  // first we get the movie object using the ID, then update the movie object and then save it back to the DB
-  Movie
-    .findById(req.params.movieId)
-    .exec(
-      function(err, movie) {
-        if (!movie) {
-          res.status(404).json({"message": "Movie not found" });
-        } else if (err) {
-          res.status(404).json(err);
-        }
-
-        movie.title = req.body.title;
-        movie.movie_rating = req.body.movie_rating;
-        movie.genre = req.body.genre;
-        movie.description = req.body.description;
-        movie.imageName = req.body.imageName;
-
-        movie.save(function(err, movie) {
-          if (err) {
-            console.log('Movie NOT updated');
-            res.status(404).json(err);
-          } else {
-            console.log('Movie updated');
-            res.status(200).json(movie);
-          }
-        });
-      }
-    );
+  Movie.findByIdAndUpdate(req.params.movieId, req.body)
+    .then(movie => {
+      console.log('Movie updated ' + movie.title);
+      res.status(200).json(movie);
+    })
+    .catch( error => {
+      console.log('Movie NOT updated ' + error);
+      res.status(404).json(error);
+    })
 };
 
 
@@ -238,7 +208,7 @@ module.exports.moviesUpdateOne = function(req, res) {
 module.exports.moviesDeleteOne = function(req, res) {
   console.log('Movie ID: ' + req.params.movieid);
 
-  var movieid = req.params.movieid;
+  const movieid = req.params.movieid;
 
   if (movieid) {
     Movie

@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var User = mongoose.model('user');
-var util = require('util');
+const User = mongoose.model('user');
+//const util = require('util');
 
 /******************/
 /* List All Users */
@@ -33,6 +33,7 @@ module.exports.usersList = function(req, res) {
 /* Find User by email */
 /**********************/
 module.exports.userEmailReadOne = function(req, res) {
+  /** @param {String} req.params.emailAddress */
   console.log('Finding One User using email:', req.params.emailAddress);
   if (req.params && req.params.emailAddress) {
     User
@@ -109,23 +110,18 @@ module.exports.userIdReadOne = function(req, res) {
 /* Create a user in the database */
 module.exports.userCreate = function(req, res) {
   console.log('API userCreate: ');
-  var user = new User(req.body);
+  console.log('User: ' + req.body);
 
-  console.log('User: ' + user);
-
-  // look into using create, its a new and save all in one
-
-  user.save(function(err, user) {
-    if (err) {
-      console.log('Error in create: ' + err);
-      res.status(404).json(error);
-    } else {
+  User.create(req.body)
+    .then( user => {
       console.log('User saved to database: ' + user);
-      res.status(201).json(user)
-    }
-  });
+      res.status(201).json(user);
+    })
+    .catch( error => {
+      console.log('Error in create: ' + error);
+      res.status(404).json(error);
+    });
 };
-
 
 /********************/
 /* Deleting a User */
@@ -168,33 +164,12 @@ module.exports.userUpdateOne = function(req, res) {
     res.status(404).json({ "message": "No User id"});
   }
 
-  // first we get the user object using the ID, then update the user object and then save it back to the DB
-  User
-    .findById(req.params.userId)
-    .select('-reviews -createdOn')        // everything but reviews and ratings
+  User.findByIdAndUpdate(req.params.userId, req.body)
     .then( user => {
-      if (!user) {
-        res.status(404).json({"message": "user not found"});
-      } else {
-        user.email = req.body.email;
-        user.password = req.body.password;
-        user.role = req.body.role;
-        user.accountActive = req.body.accountActive;
-
-        user.save(function(err, user) {
-          if (err) {
-            console.log('User NOT updated');
-            res.status(404).json(err);
-          } else {
-            console.log('User updated');
-            res.status(200).json(user);
-          }
-        });
-      }
+      console.log('User updated ' + user.email);
+      res.status(200).json(user);
     })
     .catch( error => {
-      console.log('404 error with update statement');
-      res.status(404).json(error);
-    });
-
+      res.status(404).json({"message": "user not found or update failed " + error});
+    })
 };

@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Review = mongoose.model('review');
-var util = require('util');
+const Review = mongoose.model('review');
+const util = require('util');
 
 /********************/
 /* Creating a Review */
@@ -10,17 +10,16 @@ var util = require('util');
 /* Create a review in the database */
 module.exports.reviewCreate = function(req, res) {
   console.log('API reviewCreate ' + util.inspect(req.body));
-  var review = new Review(req.body);
 
-  review.save(function(err, review) {
-    if (err) {
-      console.log('Error in create: ' + err);
-      res.status(404).json(error);
-    } else {
+  Review.create(req.body)
+    .then( review => {
       console.log('Review saved to database: ' + review);
       res.status(201).json(review);
-    }
-  });
+    })
+    .catch( error => {
+      console.log('Error in create: ' + err);
+      res.status(404).json(error);
+    });
 };
 
 /************************/
@@ -29,6 +28,7 @@ module.exports.reviewCreate = function(req, res) {
 
 /* returns an array of objects */
 module.exports.reviewsUserIdList = function(req, res) {
+  /** @param {String} req.movie.userid */
   console.log('Finding all Reviews for user with ID: ', req.params.userid);
 
   // Using promises
