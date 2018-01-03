@@ -1,0 +1,20 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/login_register.css')
+  body
+
+    block content
+      .title_bar
+        h3= 'Dataflix'
+      .login_div
+        form(method='POST' action='/login')
+          div.form-group
+            input.form-control(type='text' id='email' placeholder='Email' name='email')
+          div.form-group
+            input.form-control(type='password' id='password' placeholder='Password' name='password')
+          button.btn.btn-primary(type='submit' class="btn_login") Log in
+        p ---- Or ----
+        a(href="/register")
+          button(type="button" class="btn btn-info btn-sm") Register

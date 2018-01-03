@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 require('./app_api/models/db');
 
-var index = require('./app_server/routes/index');
+// var index = require('./app_server/routes/index');
 var ddmovieApi = require('./app_api/routes/index');
+var ddmovie = require('./app_server/routes/index');
 
 var app = express();
 
@@ -23,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use('/', ddmovie);
 app.use('/ddmovie_api', ddmovieApi);
 
 // catch 404 and forward to error handler

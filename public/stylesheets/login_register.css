@@ -1,0 +1,12 @@
+.login_div {
+    margin-top: 100px;
+    text-align: center;
+}
+
+#email, #password {
+    margin-top: 10px;
+}
+
+.btn_login {
+    margin-top: 10px;
+}
