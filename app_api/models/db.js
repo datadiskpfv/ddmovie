@@ -1,6 +1,10 @@
 var mongoose = require( 'mongoose' );
 //var util = require('util');
 
+
+// a promise a request that will return sometime in the future, the promise may or may not
+// be full filled. a promise can be in three states fullfilled , rejected or pending. the code
+// will deal will fullfilled or rejected.
 mongoose.Promise = global.Promise;
 
 var dbURI = 'mongodb://localhost/ddmovies';

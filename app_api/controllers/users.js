@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
+//const User = mongoose.model('user');
 
-const User = mongoose.model('user');
+// using below replaces the two lines of code above
+const User = require('../models/user');
 //const util = require('util');
 
 /******************/
@@ -14,9 +16,9 @@ module.exports.usersList = function(req, res) {
   // Using promises
   User.find()
     .sort('email')
-    .then( users => {      // users will contain any users found
+    .then( users => {      // users will contain any users found, its possible that no users are found
       if(!users) {
-        console.log('404 no users found');
+        console.log('200 no users found');
         res.status(200).json({ "message": "no users found" + err });
       } else {
         console.log('200 found users');
@@ -35,13 +37,13 @@ module.exports.usersList = function(req, res) {
 module.exports.userEmailReadOne = function(req, res) {
   /** @param {String} req.params.emailAddress */
   console.log('Finding One User using email:', req.params.emailAddress);
-  if (req.params && req.params.emailAddress) {
+  if (req.params.emailAddress) {
     User
       .find({email: req.params.emailAddress})
       .sort('email')
       .then(user => {
         if (!user) {
-          res.status(404).json({"message": "user not found" + err});
+          res.status(200).json({"message": "user not found" + err});
         } else  {
           res.status(200).json(user);
         }
@@ -67,8 +69,8 @@ module.exports.usersSearch = function(req, res) {
     .sort('email')
     .then( users => {      // users will contain any users found
       if(!users) {
-        console.log('404 no users found');
-        res.status(404).json({ "message": "No users found"});
+        console.log('200 no users found');
+        res.status(200).json({ "message": "No users found"});
       } else {
         console.log('200 found users');
         res.status(200).json(users)
@@ -87,20 +89,25 @@ module.exports.userIdReadOne = function(req, res) {
   console.log('Find User ', req.params.userId);
 
   // Using promises
-  User.findById(req.params.userId)
-    .then( users => {      // users will contain any users found
-      if(!users) {
-        console.log('404 no users found');
-        res.status(404).json({ "message": "No users found"});
-      } else {
-        console.log('200 found users');
-        res.status(200).json(users)
-      }
-    })
-    .catch( error => {
-      console.log('404 error with search statement');
-      res.status(404).json(error)
-    });
+  if (req.params.userId) {
+    User.findById(req.params.userId)
+      .then( users => {      // users will contain any users found
+        if(!users) {
+          console.log('404 no users found');
+          res.status(404).json({ "message": "No users found"});
+        } else {
+          console.log('200 found users');
+          res.status(200).json(users)
+        }
+      })
+      .catch( error => {
+        console.log('404 error with search statement');
+        res.status(404).json(error)
+      });
+  } else {
+      console.log('No user ID specified');
+      res.status(404).json({"message": "No user ID in request"});
+  }
 };
 
 /********************/
@@ -131,11 +138,9 @@ module.exports.userCreate = function(req, res) {
 module.exports.userDeleteOne = function(req, res) {
   console.log('User ID: ' + req.params.userId);
 
-  const userid = req.params.userId;
-
-  if (userid) {
+  if (req.params.userId) {
     User
-      .findByIdAndRemove(userid)
+      .findByIdAndRemove(req.params.userId)
       .then( () => {
         console.log('User deleted');
         res.status(204).json();

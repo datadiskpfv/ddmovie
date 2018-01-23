@@ -52,6 +52,7 @@ module.exports.moviesList = function(req, res) {
 module.exports.moviesReadOne = function(req, res) {
   /** @param {String} req.movie.movieid */
   console.log('Finding One Movie using ID:', req.params.movieid);
+
   if (req.params.movieid) {
     Movie
       .findById(req.params.movieid)
@@ -64,8 +65,8 @@ module.exports.moviesReadOne = function(req, res) {
         res.status(404).json(error);
       });
   } else {
-    console.log('No movieid specified');
-    res.status(404).json({ "message": "No movieid in request" })
+    console.log('No movie ID specified');
+    res.status(404).json({ "message": "No movie ID in request" })
   }
 };
 
@@ -75,6 +76,12 @@ module.exports.moviesReadOne = function(req, res) {
 module.exports.moviesTitleSearch = function(req, res) {
   /** @param {String} req.movie.searchString */
   console.log('Find Movies with title', req.params.searchString);
+
+  // make sure we have a search string, otherwise it pointless to go on
+  if (!req.params.searchString) {
+      console.log('No search string for title');
+      res.status(404).json({ "message": "No search string for title"});
+  }
 
   Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
     .then( movie => {      // movies will contain any movies found
@@ -98,6 +105,12 @@ module.exports.moviesTitleSearch = function(req, res) {
 module.exports.moviesGenreSearch = function(req, res) {
   console.log('Find Movies with title', req.params.searchString);
 
+  // make sure we have a search string, otherwise it pointless to go on
+  if (!req.params.searchString) {
+      console.log('No search string for genere');
+      res.status(404).json({ "message": "No search string for genre"});
+  }
+
   Movie.find({genre: {"$regex": req.params.searchString, $options: "i"}})
     .then( movie => {      // movies will contain any movies found
       if (movie) {
@@ -119,6 +132,12 @@ module.exports.moviesGenreSearch = function(req, res) {
 /****************************************************/
 module.exports.moviesPopulateSearch = function(req, res) {
   console.log('Find Movies with title and populating', req.params.searchString);
+
+  // make sure we have a search string, otherwise it pointless to go on
+  if (!req.params.searchString) {
+    console.log('No search string for title');
+    res.status(404).json({ "message": "No search string for title"});
+  }
 
   Movie.find({title: {"$regex": req.params.searchString, $options: "i"}})
     .populate({
@@ -159,7 +178,7 @@ module.exports.movieAddReview = function(req, res) {
         res.status(404).json(err);
       })
   } else {
-    res.status(404).json({"message": "Not found, movieid is required" });
+    res.status(404).json({"message": "Not found, movie ID is required" });
   }
 };
 
@@ -179,7 +198,7 @@ module.exports.moviesUpdateOne = function(req, res) {
         res.status(404).json(error);
       })
   } else {
-    res.status(404).json({"message": "Not found, movieid is required" });
+    res.status(404).json({"message": "Not found, movie ID is required" });
   }
 };
 
@@ -202,6 +221,6 @@ module.exports.moviesDeleteOne = function(req, res) {
       })
 
   } else {
-    res.status(404).json({ "message": "No movieid" });
+    res.status(404).json({ "message": "No movie ID" });
   }
 };

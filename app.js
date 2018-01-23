@@ -1,16 +1,23 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+// express handles HTTP requests, sets up and handles routing, renders HTTP web pages
+// handles cookies, sessions, etc
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+
+// handles cookies, both reading and writing
+let cookieParser = require('cookie-parser');
+
+// passes the HTTP body of POST, PATCH and PUT requests
+let bodyParser = require('body-parser');
+
 require('./app_api/models/db');
 
 // var index = require('./app_server/routes/index');
-var ddmovieApi = require('./app_api/routes/index');
-var ddmovie = require('./app_server/routes/index');
+let ddmovieApi = require('./app_api/routes/index');
+let ddmovie = require('./app_server/routes/index');
 
-var app = express();
+let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
@@ -29,8 +36,8 @@ app.use('/ddmovie_api', ddmovieApi);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
+    let err = new Error('Not Found');
+    err.status = 404;
   next(err);
 });
 

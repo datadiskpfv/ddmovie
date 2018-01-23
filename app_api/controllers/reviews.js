@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
+//const Review = mongoose.model('review');
 
-const Review = mongoose.model('review');
+const Review = require('../models/review');
 const util = require('util');
 
 /********************/
@@ -31,14 +32,20 @@ module.exports.reviewsUserIdList = function(req, res) {
   /** @param {String} req.movie.userid */
   console.log('Finding all Reviews for user with ID: ', req.params.userid);
 
+  // make sure we have a user ID, otherwise it pointless to go on
+  if (!req.params.userid) {
+      console.log('No User Id');
+      res.status(404).json({ "message": "No User id"});
+  }
+
   // Using promises
   Review.find({userId: req.params.userid})
     .populate('userId')       // to get everything back (user details) remove ._id
-    .populate('movieId')       // to get everything back (user details) remove ._id
-    .sort('-createdOn')           // - (minus) means DESC
-    .then( reviews => {           // reviews will contain any reviews found
+    .populate('movieId')      // to get everything back (user details) remove ._id
+    .sort('-createdOn')       // - (minus) means DESC
+    .then( reviews => {       // reviews will contain any reviews found
       if(!reviews) {
-        console.log('404 no reviews found');
+        console.log('200 no reviews found');
         res.status(200).json({ "message": "no reviews found" + err });
       } else {
         console.log('200 found reviews');

@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+
 var ctrlMovies = require('../controllers/movies');
 var ctrlReviews = require("../controllers/reviews");
 var ctrlUsers = require("../controllers/users");
+
+// Routes are URL's mapped to functions
+// when a URL is requested the method will be called
 
 // Movies API
 router.post('/movies', ctrlMovies.movieCreate);

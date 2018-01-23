@@ -14,12 +14,14 @@
     "express": "~4.15.5",
     "jade": "~1.11.0",
     "mongoose": "^4.13.5",
+    "mongoose-unique-validator": "^1.0.6",
     "morgan": "~1.9.0",
     "request": "^2.83.0",
     "serve-favicon": "~2.4.5",
     "util": "^0.10.3"
   },
   "devDependencies": {
+    "assert": "^1.4.1",
     "chai": "^4.1.2",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
