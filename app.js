@@ -1,5 +1,6 @@
 // express handles HTTP requests, sets up and handles routing, renders HTTP web pages
 // handles cookies, sessions, etc
+require('dotenv').load();
 let express = require('express');
 let path = require('path');
 let favicon = require('serve-favicon');
@@ -10,8 +11,10 @@ let cookieParser = require('cookie-parser');
 
 // passes the HTTP body of POST, PATCH and PUT requests
 let bodyParser = require('body-parser');
+let passport = require('passport');
 
 require('./app_api/models/db');
+require('./app_api/config/passport');
 
 // var index = require('./app_server/routes/index');
 let ddmovieApi = require('./app_api/routes/index');
@@ -30,6 +33,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(passport.initialize());
 
 app.use('/', ddmovie);
 app.use('/ddmovie_api', ddmovieApi);

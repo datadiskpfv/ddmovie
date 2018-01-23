@@ -1,12 +1,13 @@
 const {server, assert, util} = require('../../common/common');
+const User = require('../../../app_api/models/user');
 
 describe('API User create test', () => {
 
-  it('can create a User', (done) => {
+  it.only('can create a User', (done) => {
 
     let user = {
       email: 'Paul.Valle@datadisk.co.uk',
-      password: 'password',
+      password: 'passwordPassport',
       role: 'admin'
     }
 
@@ -38,14 +39,14 @@ describe('API User create test', () => {
 
             // check that user has been retrieved
             assert.equal(res.body[0].email, 'paul.valle@datadisk.co.uk');
-            assert.equal(res.body[0].password, 'password');
+            //assert.equal(res.body[0].password, 'passwordPassport');
             assert.equal(res.body[0].role, 'admin');
             done();
           });
       });
   });
 
-    it.only('can create a unique User', (done) => {
+    it('can create a unique User', (done) => {
 
         let user1 = {
             email: 'paul.valle@datadisk.co.uk',
@@ -87,10 +88,13 @@ describe('API User create test', () => {
                     done(err)       // stop the test if we have an error
                 }
 
-                console.log("err and res " + err + " " + res.statusCode);
+                //console.log("err and res " + err + " " + util.inspect(res));
 
                 // check that we got back a 404
                 assert.equal(res.statusCode, 404);
+
+                // assert does not have string comparison unbelievable
+                //assert.has(res.body.errmsg, 'duplicate key error');
                 done();
             });
     });

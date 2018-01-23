@@ -1,5 +1,5 @@
 //const mongoose = require('mongoose');
-//const User = mongoose.model('user');
+//const user = mongoose.model('user');
 
 // using below replaces the two lines of code above
 const User = require('../models/user');
@@ -15,6 +15,7 @@ module.exports.usersList = function(req, res) {
 
   // Using promises
   User.find()
+    .select('-salt')        // never return the salt
     .sort('email')
     .then( users => {      // users will contain any users found, its possible that no users are found
       if(!users) {
@@ -40,6 +41,7 @@ module.exports.userEmailReadOne = function(req, res) {
   if (req.params.emailAddress) {
     User
       .find({email: req.params.emailAddress})
+      .select('-salt')
       .sort('email')
       .then(user => {
         if (!user) {
@@ -66,6 +68,7 @@ module.exports.usersSearch = function(req, res) {
 
   // Using promises
   User.find({email: {"$regex": req.params.searchString, $options: "i"}})
+    .select('-salt')
     .sort('email')
     .then( users => {      // users will contain any users found
       if(!users) {
@@ -119,7 +122,12 @@ module.exports.userCreate = function(req, res) {
   console.log('API userCreate: ');
   console.log('User: ' + req.body);
 
-  User.create(req.body)
+  let user = new User();
+  user.email = req.body.email;
+  user.password = user.setPassword(req.body.email);
+  user.role = req.body.role;
+
+  User.create(user)
     .then( user => {
       console.log('User saved to database: ' + user);
       res.status(201).json(user);
